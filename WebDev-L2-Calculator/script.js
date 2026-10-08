@@ -1,157 +1,160 @@
-const buttons = document.querySelectorAll("button");
-const screen = document.getElementById("screen");
+const screen = document.querySelector(".screen");
+const buttons = document.querySelectorAll(".btn");
 
 let currentInput = "";
-let previousInput = "";
-let operator = "";
+let expression = [];
+let result = "";
+let justCalculated = false;
+let errorState = false;
 
-buttons.forEach(button => {
+function showError() {
+  screen.textContent = "Error";
 
-    button.addEventListener("click", () => {
+  currentInput = "";
+  expression = [];
+  result = "";
+  justCalculated = false;
+  errorState = true;
+}
 
-        if (screen.value === "Error") {
-        currentInput = "";
-        previousInput = "";
-        operator = "";
+buttons.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const value = btn.textContent;
+
+    if (errorState && value !== "C") {
+      return;
     }
 
-        switch (button.textContent) {
-
-            case "+":
-            case "-":
-            case "*":
-            case "/":
-
-                if (currentInput === "") {
-                    operator = button.textContent;
-                    return;
-                }
-
-                if (previousInput !== "" && currentInput !== "") {
-
-                    const firstNumber = parseFloat(previousInput);
-                    const secondNumber = parseFloat(currentInput);
-
-                    const result = calculate(
-                        firstNumber,
-                        secondNumber,
-                        operator
-                    );
-
-                    previousInput = result.toString();
-
-                } else {
-
-
-                    previousInput = currentInput;
-                }
-
-
-                operator = button.textContent;
-
-
-                currentInput = "";
-
-                screen.value = previousInput;
-
-                break;
-
-            case "=":
-
-                if (
-                    previousInput !== "" &&
-                    currentInput !== "" &&
-                    operator !== ""
-                ) {
-
-                    const firstNumber = parseFloat(previousInput);
-                    const secondNumber = parseFloat(currentInput);
-
-                    const result = calculate(
-                        firstNumber,
-                        secondNumber,
-                        operator
-                    );
-
-                    screen.value = result;
-
-
-                    currentInput = result.toString();
-
-
-                    previousInput = "";
-                    operator = "";
-                }
-
-                break;
-
-
-            case "C":
-
-                currentInput = "";
-                previousInput = "";
-                operator = "";
-
-                screen.value = "0";
-
-                break;
-
-
-            case "DEL":
-
-                currentInput = currentInput.slice(0, -1);
-
-                screen.value = currentInput || "0";
-
-                break;
-
-
-            default:
-
-                if (button.textContent === ".") {
-
-
-                    if (!currentInput.includes(".")) {
-                        currentInput += ".";
-                    }
-
-                } else {
-
-                    currentInput += button.textContent;
-                }
-
-                screen.value = currentInput;
-
-                break;
+    switch (value) {
+      case "+":
+      case "-":
+      case "*":
+      case "/":
+        if (justCalculated) {
+          expression = [String(result)];
+          justCalculated = false;
+          currentInput = "";
         }
 
-    });
+        if (currentInput !== "") {
+          expression.push(currentInput);
+          currentInput = "";
+        }
 
-});
+        if (["+", "-", "*", "/"].includes(expression[expression.length - 1])) {
+          expression[expression.length - 1] = value;
+        } else {
+          expression.push(value);
+        }
 
+        screen.textContent = expression.join("");
 
-function calculate(firstNumber, secondNumber, operator) {
+        break;
 
-    switch (operator) {
+      case "=":
+        if (currentInput !== "") {
+          expression.push(currentInput);
+        }
 
-        case "+":
-            return firstNumber + secondNumber;
-
-        case "-":
-            return firstNumber - secondNumber;
-
-        case "*":
-            return firstNumber * secondNumber;
-
-        case "/":
-
-            if (secondNumber === 0) {
-                return "Error";
+        if (
+          expression.length === 0 ||
+          ["+", "-", "*", "/"].includes(expression[expression.length - 1])
+        ) {
+          return;
+        }
+        for (let i = 0; i < expression.length; i++) {
+          if (expression[i] == "*") {
+            let left = Number(expression[i - 1]);
+            let right = Number(expression[i + 1]);
+            result = left * right;
+            expression.splice(i - 1, 3, String(result));
+            i = -1;
+          }
+          if (expression[i] == "/") {
+            let left = Number(expression[i - 1]);
+            let right = Number(expression[i + 1]);
+            if (right === 0) {
+              showError();
+              return;
             }
+            result = left / right;
+            expression.splice(i - 1, 3, String(result));
+            i = -1;
+          }
+        }
+        for (let i = 0; i < expression.length; i++) {
+          if (expression[i] == "+") {
+            let left = Number(expression[i - 1]);
+            let right = Number(expression[i + 1]);
+            result = left + right;
+            expression.splice(i - 1, 3, String(result));
+            i = -1;
+          }
+          if (expression[i] == "-") {
+            let left = Number(expression[i - 1]);
+            let right = Number(expression[i + 1]);
+            result = left - right;
+            expression.splice(i - 1, 3, String(result));
+            i = -1;
+          }
+        }
+        screen.textContent = result;
+        justCalculated = true;
+        currentInput = "";
 
-            return firstNumber / secondNumber;
+        break;
 
-        default:
-            return secondNumber;
+      case "C":
+        currentInput = "";
+        expression = [];
+        result = "";
+        justCalculated = false;
+        errorState = false;
+
+        screen.textContent = "0";
+
+        break;
+      case "DEL":
+        if (!justCalculated) {
+          currentInput = currentInput.slice(0, -1);
+          screen.textContent = expression.join("") + currentInput;
+        }
+
+        break;
+
+      case ".":
+        if (justCalculated) {
+          expression = [];
+          currentInput = "";
+          result = "";
+          justCalculated = false;
+        }
+
+        if (!currentInput.includes(".")) {
+          if (currentInput === "") {
+            currentInput = "0.";
+          } else {
+            currentInput += ".";
+          }
+        }
+
+        screen.textContent = expression.join("") + currentInput;
+
+        break;
+
+      default:
+        if (justCalculated) {
+          expression = [];
+          currentInput = "";
+          result = "";
+          justCalculated = false;
+        }
+
+        currentInput += value;
+
+        screen.textContent = expression.join("") + currentInput;
+
+        break;
     }
-}
+  });
+});
