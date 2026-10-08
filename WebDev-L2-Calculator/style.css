@@ -1,70 +1,83 @@
-	*{
-	box-sizing: border-box;
-	}
-	body{
-	margin: 0px;
-	padding: 0px;
-	min-height: 100vh;
-	background-color: darksalmon;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	}
-	.container{
-	border:solid black 1px;
-	width: min(90vw,332px);
-	border-radius: 7%;
-	overflow: hidden;
-	background-color:darksalmon;
+	* {
+		box-sizing: border-box;
 	}
 
-	.screen{
-	height:clamp(70px, 10vh, 150px);
-	border:solid black 1px;
+	body {
+		margin: 0px;
+		padding: 0px;
+		min-height: 100vh;
+		background-color: darksalmon;
 
-	display:flex;
-	justify-content: flex-end;
-	align-items: center;
-	font-size:2rem;
-	padding: 10px;
-	margin: 10px;
-	border:none;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+
+	.container {
+		width: min(90vw, 332px);
+		height: min(90vh, 480px);
+		border-radius: 7%;
+		display: flex;
+		flex-direction: column;
+		border: solid black 1px;
+
+		background-color: darksalmon;
 
 	}
 
-	.buttons-container{
-	display:grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 10px;
-	padding:12px;
 
-	background-color:lightpink;
-	}
-
-	.btn{
-	padding: 10px;
-	font-size: 1.5rem;
-	border-radius: 1rem;
-	height: clamp(45px, 14vw, 55px);
-	background-color: white;
-	border:none;
-	transition: 0.25s;
+	.screen {
+		flex: 0 0 clamp(45px, 10vh, 80px);
+		border: solid black 1px;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		font-size: 2rem;
+		border: none;
+		padding: 0px 10px;
 	}
 
-	.clear{
-	grid-column: 1/3;
-	background-color:darksalmon;
-	}
-	.delete{
-	grid-column: 3/5;
-	background-color: whitesmoke;
+
+	.buttons-container {
+		flex: 1;
+
+		display: grid;
+
+		grid-template-columns: repeat(4, 1fr);
+		grid-template-rows: repeat(5, minmax(0, 1fr));
+
+		gap: clamp(4px, 2vw, 16px);
+		padding: clamp(6px, 2vw, 16px);
+		overflow: hidden;
+		background-color: lightpink;
+		border-radius: 0 0 7% 7%;
 	}
 
-	.btn:hover{
-		background-color:darkgrey;
+	.btn {
+		padding: clamp(4px, 1.5vh, 10px);
+		font-size: clamp(1rem, 4vh, 1.5rem);
+		background-color: white;
+		border: none;
+		transition: 0.25s;
+		border-radius: 1rem;
 	}
-.btn:active {
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
+
+	.clear {
+		grid-column: 1/3;
+		background-color: darksalmon;
+	}
+
+	.delete {
+		grid-column: 3/5;
+		background-color: whitesmoke;
+	}
+
+	.btn:hover {
+		background-color: darkgrey;
+	}
+
+	.btn:active {
+		box-shadow: 0 5px #666;
+		transform: translateY(4px);
+	}
