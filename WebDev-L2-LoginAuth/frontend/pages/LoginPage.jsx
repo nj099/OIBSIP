@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import "../src/App.css";
 
 
-function Login() {
+function Login({ onLogin }) {
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const [error,setError]=useState("");
@@ -32,10 +32,14 @@ function Login() {
         throw new Error(data.message || "Login failed. Please try again.");
       }
 
-      if (data.token) {
-        localStorage.setItem("auth_token", data.token);
-      }
-      navigate("/dashboard", { replace: true });
+if (!data.token) {
+  throw new Error("Login succeeded but no token was received.");
+}
+
+localStorage.setItem("auth_token", data.token);
+onLogin(data.token);
+
+navigate("/dashboard", { replace: true });
     }
     catch(err){
       setError(err.message);
