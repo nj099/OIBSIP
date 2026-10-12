@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo app</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>My Tasks</h1>
+        <div class="add-task">
+            <input type="text" placeholder="What needs doing?" />
+            <button>Add</button>
+        </div>
+
+        <div class="task-section pending-section">
+            <div class="section-header">
+                <h2>Pending Tasks</h2>
+                <span id="pending-count">0 pending</span>
+            </div>
+            <div class="pending-tasks">
+                <!-- Tasks will be added here using JavaScript -->
+            </div>
+
+            <p class="empty-message">Nothing pending — add a task above!</p>
+        </div>
+        <div class="task-section completed-section">
+            <div class="section-header">
+                <h2>Completed Tasks</h2>
+                <span id="completed-count">0 completed</span>
+            </div>
+
+            <div class="completed-tasks">
+                <!-- Completed tasks will be added here -->
+            </div>
+
+            <p class="empty-message">
+                No completed tasks yet. You've got this!
+            </p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
